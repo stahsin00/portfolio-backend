@@ -7,6 +7,17 @@ const nodemailer = require('nodemailer');
 
 router.post('/submit', async (req, res, next) => {
     try {
+        const { name, email, message } = req.body;
+
+        if (!name || !email || !message) {
+            return res.status(400).json({message: "Missing fields."});
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({message: "Invalid email format."});
+        }
+
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -18,8 +29,8 @@ router.post('/submit', async (req, res, next) => {
         const mailOptions = {
             from: process.env.EMAIL,
             to: process.env.EMAIL,
-            subject: "Testing",
-            text: "This is a test email."
+            subject: `Contact Form: Message from ${name}`,
+            text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`
         };
 
         const info = await transporter.sendMail(mailOptions);
