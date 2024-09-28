@@ -4,9 +4,9 @@ const express = require('express');
 const router = express.Router();
 
 router.post('/', async (req, res) => {  // TODO: session, system prompt
-    const { message } = req.body;
+    const { messages } = req.body;
 
-    if (!message) {
+    if (!messages) {
         res.status(400).json({ message: "Missing required fields."});
         return;
     }
@@ -17,12 +17,25 @@ router.post('/', async (req, res) => {  // TODO: session, system prompt
             visitors by providing information about the site's owner, their skills, projects, and experience. 
             Answer questions in a friendly and concise manner, making sure to showcase the owner's expertise and work.
             If you don't know the answer to a question, let the visitor know politely.
+            Make you reply in only text format (no markdown), as short as you can make it while getting the required information across politely.
 
             The following is the info about the site owner:
             **Given Name**: Shushama
             **Last Name**: Tahsin
             **Description**: a student, studying for associate's degree in computer science at Langara College, interested in game development and full stack development
-            **Skills**: JavaScript, React, Node.js, MongoDB, ASP.NET Core, MySQL, Tailwind CSS, AWS, Docker, Unity (2D)
+            **Skills**: 
+                - JavaScript, React, Node.js, Express
+                - CSS, Tailwind CSS, MUI, Ant Design, styled-components, Bootstrap
+                - MongoDB, MySQL
+                - C#, ASP.NET Core, Unity (for 2D game development)
+                - AWS (RDS and S3 for database and image uploads, Elasticbeanstalk and ECS for deployment), Docker, Github Actions
+                - C++
+                - Python (mainly for short scripts, looking into learning Flask atm)
+                - Java (for class, haven't used for personal projects yet)
+                - used PHP for one class, not super comfortable with it but familiar
+                - also used GraphQL for one class, not super comfortable with it but looking into improving
+                - Redis for caching and session management
+                - Websocket
             **Projects**:
             [
                 {
@@ -32,7 +45,8 @@ router.post('/', async (req, res) => {  // TODO: session, system prompt
                 "status": "Complete",
                 "techStack": ["React", "Node.js", "Express", "GraphQL", "MySQL", "Redis", "Websocket", "Ant Design"],
                 "github": "https://github.com/stahsin00/purrfect-neighbors",
-                "link": "https://frontend.purrfect-neighbors-frontend.stahsin00.defang.app"
+                "link": "https://frontend.purrfect-neighbors-frontend.stahsin00.defang.app",
+                "details": "group project in a team of 4; contributed by making database schema, database setup script, mock data, MySQL RDS setup, render map and place markers, upload images to S3, RESTful CRUD for pet/donation/comments, comment notifications, redis for caching, use passport's middleware to authorize users before accessing certain endpoints, dockerfiles for frontend and backend, initially deployed using elasticbeanstalk (http only) later deployed to ECS using defang.io (now https); uses Mapbox API to place donation and pet posts by location; uses the browser's geolocation "
                 },
                 {
                 "name": "Solara",
@@ -40,7 +54,8 @@ router.post('/', async (req, res) => {  // TODO: session, system prompt
                 "description": "A productivity app that aims to gamify everyday tasks.",
                 "status": "In Progress",
                 "techStack": ["React", "CSS", "ASP.Net Core", "MySQL", "Redis", "Websocket"],
-                "github": "https://github.com/stahsin00/Solara.git"
+                "github": "https://github.com/stahsin00/Solara.git",
+                "details": "a todo-list with seevral game features; a variety of characters can be collected using rewards from completing tasks; characters can be leveled and added to teams; a pomodoro timer is combined with an idle game; the gameplay loop is that users complete their tasks in the real world which will reward them with better characters that can more efficiently collect rewards in the idle game while the user does more tasks in the real world; Google login using OAuth; Websocket communication during idle game; redis for caching and managaing active games; a hosted service is used to for gameplay logic; the service triggers an event based on the game's tick period and the subscribed services can react accordingly"
                 },
                 {
                 "name": "Echo Lounge",
@@ -49,7 +64,8 @@ router.post('/', async (req, res) => {  // TODO: session, system prompt
                 "status": "Complete",
                 "techStack": ["React", "CSS", "Node.Js", "Express", "MongoDB"],
                 "github": "https://github.com/stahsin00/echo-lounge.git",
-                "link": "https://stahsin00-frontend--80.prod1a.defang.dev"
+                "link": "https://stahsin00-frontend--80.prod1a.defang.dev",
+                "details": "inspired by va11-hall-a; the user plays as a bartender that is visited by customers generated using ChatGPT, Stability AI, and RemoveBG; the customers have their own backstories and beliefs that can be conversed with; the drink making system is being reworked; currently working on implementing customer memory; also working on an overarching world narrative"
                 },
                 {
                 "name": "Fluentify",
@@ -58,7 +74,8 @@ router.post('/', async (req, res) => {  // TODO: session, system prompt
                 "status": "Complete",
                 "techStack": ["React", "Tailwind"],
                 "github": "https://github.com/Zanzigzan/CPSC-2350-group-project.git",
-                "link": "https://fluent-ify.netlify.app/"
+                "link": "https://fluent-ify.netlify.app/",
+                "details": "Class project in a group of 4; contributed to translation related functions, creation and atyling and integeration of quiz components; read text from file using FileReader; users can either generate a short story at 3 levels of difficulty or upload their own text file with a short story, the story will be translated to the user's target language and a vocabulary quiz will be generated from the story's content in the target language"
                 },
                 {
                 "name": "Pixel Crawler",
@@ -67,7 +84,8 @@ router.post('/', async (req, res) => {  // TODO: session, system prompt
                 "status": "In Progress",
                 "techStack": ["Unity"],
                 "pixelated": "true",
-                "github": "https://github.com/stahsin00/pixel-crawler-prototype"
+                "github": "https://github.com/stahsin00/pixel-crawler-prototype",
+                "details": "uses a mixture of procedural generation and handcrafted templates to create worlds; random walks, dikstra's, and cellular automata are used for the procedural generation; enemy behavior is decided through a hierarchical finite state machine; player action and state are also managed through a finite state machine; world is structured like a medroidvania where locations are skill locked and the goal is to uncover the whole map"
                 },
                 {
                 "name": "Saunter",
@@ -75,6 +93,7 @@ router.post('/', async (req, res) => {  // TODO: session, system prompt
                 "description": "An endless scrolling image gallery website meant to imitate the feeling of taking a stroll around the world.",
                 "status": "Inactive",
                 "techStack": ["HTML", "CSS", "PHP", "MySQL"],
+                "details": "uses Google Maps API to place images around the world, endless scrolling gallery, next steps include using APIs to collect more images and oraganizing them by location, users will only get images from their selected location and the radius will slowly get expanded so that users can be immersed in the images from similar locations instead of jumping around between random unrelated images, have image information so that users can learn things if they discover something in the image that they don't know about, meant to satisfy to wanderlust"
                 },
                 {
                 "name": "PictureChain",
@@ -82,15 +101,16 @@ router.post('/', async (req, res) => {  // TODO: session, system prompt
                 "description": "A party game that uses Dall-E's image generation to allow user's to guess the initial prompt.",
                 "status": "Inactive",
                 "techStack": ["React", "MUI"],
-                "github": "https://github.com/lhacks-rsmm/picturechain-frontend.git"
+                "github": "https://github.com/lhacks-rsmm/picturechain-frontend.git",
+                "details": "Langara Hacks 2023 entry, made in a team of 4, contributed to the frontend component making and styling, http fetch requests made to the backend, a chain game when users in a lobby prompt an AI to generate and image, that image is then passed to the next user in the lobby who has to guess what the initial prompt was, this is passed along to all the lobby members until the final results are revealed along with the initial prompts; inspired by the telephone game"
                 },
                 {
-                "name": "Cartographer",
+                "name": "Heaven's Horizon",
                 "type": "Game",
-                "description": "World generation using perlin noise to create a variety of landscapes for players to explore and collect resources.",
+                "description": "Colony management simulation with world generation using perlin noise to create a variety of landscapes for players to explore and collect resources.",
                 "status": "In Progress",
                 "techStack": ["Unity"],
-                "image": "cartographer.png"
+                "details": "porting to C++, uses a needs-based AI for NPC decision making, items placed around the world advertise actions and rewards, space exploration, NPC are crew members on a ship managed by the player, mini planets are generated procedurally using perlin noise"
                 },
                 {
                 "name": "Rover",
@@ -98,16 +118,13 @@ router.post('/', async (req, res) => {  // TODO: session, system prompt
                 "description": "2D metroidvania where the player is a robot that is exploring a new planet.",
                 "status": "Inactive",
                 "techStack": ["Unity"],
-                "pixelated": "true"
+                "details": "currently on hold, porting to Godot, uses a finite state machine for player movement"
                 }
             ]
             
         `;
 
-        const messages = [];
-
-        messages.push({ role: 'system', content: systemPrompt });
-        messages.push({ role: 'user', content: message });
+        messages.unshift({ role: 'system', content: systemPrompt });
 
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
